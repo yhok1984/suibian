@@ -22,9 +22,9 @@ def send_news():
         my_friend = bot.friends().search(u'老婆')[0]
         my_friend.send(content)
         my_friend.send(u"老公每日温馨提醒")
-        schedule.every().day.at("07:15").do(send_news)
+        schedule.every().day.at("07:35").do(send_news)
         while True:
-            time.sleep(58)
+            time.sleep(86399)
             schedule.run_pending()
 
         #t = Timer(5, send_news)
