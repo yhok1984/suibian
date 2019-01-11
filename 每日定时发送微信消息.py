@@ -1,16 +1,15 @@
 #!/usr/bin/python
 #coding:utf-8
 from __future__ import unicode_literals
-from threading import Timer
 from wxpy import *
 import requests
-import time
 import datetime
-import  schedule
+import time
+
 #windows运行
-bot = Bot(cache_path=True)
+#bot = Bot(cache_path=True)
 # linux执行登陆
-#bot = Bot(console_qr=2,cache_path="botoo.pkl")
+bot = Bot(console_qr=2,cache_path="botoo.pkl")
 def get_news():
     url = "http://t.weather.sojson.com/api/weather/city/101281502"
     r = requests.get(url)
@@ -30,22 +29,22 @@ def get_news2():
     payload2 = {'consName': '狮子座', 'type' : 'today','key' : 'a0fe1635df9b5d1ae0f32f66b7285c55'}
     b = requests.get(url2,params=payload)
     c = requests.get(url3, params=payload2)
-    content2 = '今天是' + b.json()['result']['data']['lunarYear'] + '(' + b.json()['result']['data']['animalsYear'] + ')' + b.json()['result']['data']['lunar'] + b.json()['result']['data']['weekday'] + \
-               '\n' + c.json()['name'] + c.json()['summary'] + '\n财运指数：' + c.json()['money']
+    content2 = b.json()['result']['data']['lunarYear'] + '(' + b.json()['result']['data']['animalsYear'] + ')' + b.json()['result']['data']['lunar'] + b.json()['result']['data']['weekday'] + \
+               '\n' + c.json()['name'] + c.json()['summary'] + '\n今日财运指数：' + c.json()['money']
     return content2
 def send_news():
     try:
-        content = get_news()
-        content2 = get_news2()
-        my_friend = bot.friends().search(u'忙碌的余先森')[0]
-        my_friend.send(content)
-        my_friend.send(content2)
-        schedule.every().day.at("14:56").do(send_news)
         while True:
-            time.sleep(120)
-            schedule.run_pending()
-        #t = Timer(5, send_news)
-        #t.start()
+            a = int(datetime.datetime.now().strftime('%H%M'))
+            b = int('0720')
+            if a - b == 0 :
+                content = get_news()
+                content2 = get_news2()
+                my_friend = bot.friends().search(u'老婆')[0]
+                my_friend.send(content)
+                my_friend.send(content2)
+                time.sleep(60)
+
     except:
         my_friend = bot.friends().search('忙碌的余先森')[0]
         my_friend.send(u"今天的天气预报推送失败")
