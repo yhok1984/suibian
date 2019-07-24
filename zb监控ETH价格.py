@@ -13,7 +13,7 @@ while 1 > s:
     if (float(list2[0])- 1000) / p > 0.01:
         print('  涨超过1%！！ ')
     else:
-        print('  风平浪静： ')
+        print('  风平： ')
     print('  一分钟内涨跌：', list2, '    (', int(float(p) / 6.958), '美元 )')
     print('  最新：',p)
     print('  上次：',s10,'    (',int(s10/6.958),'美元 )')
