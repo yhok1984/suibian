@@ -1,15 +1,71 @@
-#coding:utf-8
-export LANG=UTF-8
-export LANGUAGE=UTF-8
+#!/bin/bash
 
-UPPDATE_TEXT_COLOR='\E[1;31m'
-RES='\E[0m'
-echo -e  "${UPPDATE_TEXT_COLOR}======2018/05/05更新======\n\n1.Python版本更新到3.6.5\n2.鉴于阿里云访问python官方源太慢,这里做了七牛cdn的加速\n\n\n${RES}"
+#####		CentOS 7一键安装Python 3		#####
+#####		作者：xiaoz.me					#####
+#####		更新时间：2018-07-20			#####
 
-yum groupinstall -y "Development tools"
-yum install -y nano nginx screen 
-yum install -y sqlite-devel ncurses-devel ncurses-libs zlib-devel mysql-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel openssl-devel
+#导入环境变量
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+export PATH
 
-wget -O python.tar.xz https://www.python.org/ftp/python/3.6.6/Python-3.6.6.tar.xz && tar xvJf python.tar.xz && cd Python-3.6.6
-./configure
-make&& make install
+#安装依赖
+function rely(){
+	yum -y install wget gcc gcc-c++ libffi-devel zlib-devel
+}
+
+#安装Python 3.7函数
+function install_py37(){
+	#调用安装依赖函数
+	rely
+	#下载源码
+	wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz
+	#解压
+	tar -xvJf Python-3.7.4.tar.xz
+	cd Python-3.7.4
+	#编译安装
+	./configure --prefix=/usr/local/python3 --enable-optimizations
+	make -j4 && make -j4 install
+	#清理工作
+	cd ..
+	rm -rf Python-*
+	#设置软连接
+	ln -s /usr/local/python3/bin/python3.7 /usr/bin/python3
+	ln -s /usr/local/python3/bin/pip3 /usr/bin/pip3
+	echo "------------------------------------------------"
+	echo '|	恭喜您，Python 3安装完成！  		 |'	
+	echo "------------------------------------------------"
+}
+
+###卸载Python 3
+function uninstall(){
+	rm -rf /usr/local/python3
+	rm -rf /usr/bin/python3
+	rm -rf /usr/bin/pip3
+	echo "------------------------------------------------"
+	echo '|	Python 3已卸载！				 |'	
+	echo "------------------------------------------------"
+}
+
+echo "------------------------------------------------------------"
+echo 'CentOS 7一键安装Python 3脚本 ^_^ 请选择需要执行的操作：'
+echo "1) 安装Python 3.7.4"
+echo "2) 卸载Python 3"
+echo "q) 退出！"
+echo "------------------------------------------------------------"
+read -p ":" istype
+
+case $istype in
+	1)
+		install_py37
+	;;
+	2)
+		uninstall
+	;;
+	'q')
+		exit
+	;;
+	*)
+		echo '参数错误！'
+		exit
+	;;
+esac	
