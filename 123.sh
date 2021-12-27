@@ -18,7 +18,7 @@ function install_py37(){
 	#调用安装依赖函数
 	rely
 	#下载源码
-	wget https://www.python.org/ftp/python/3.7.4/Python-3.7.4.tar.xz
+	wget http://npm.taobao.org/mirrors/python/3.7.4/Python-3.7.4.tar.xz
 	#解压
 	tar -xvJf Python-3.7.4.tar.xz
 	cd Python-3.7.4
